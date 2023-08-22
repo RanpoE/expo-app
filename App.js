@@ -20,6 +20,7 @@ export default function App() {
   const [showAppOptions, setShowAppOptions] = useState(false)
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [pickedEmoji, setPickedEmoji] = useState(null)
+  const [cameraRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
 
@@ -30,6 +31,13 @@ export default function App() {
     setType(current => (current === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back));
   }
 
+  const handleCapture = async () => {
+    if (cameraRef) {
+      const photo = await cameraRef.takePictureAsync();
+      // Do something with the captured photo
+      setSelectedImage(photo.uri)
+    }
+  };
 
   if (status === null) {
     requestPermission()
@@ -100,7 +108,11 @@ export default function App() {
           <ImageViewer placeholderImageSource={splashImg} selectedImage={selectedImage} />
           {pickedEmoji !== null ? <EmojiSticker imageSize={40} stickerSource={pickedEmoji} /> : null}
         </View> */}
-        <Camera style={styles.image} type={type} />
+        {selectedImage ?
+          <ImageViewer placeholderImageSource={splashImg} selectedImage={selectedImage} />
+          : <Camera style={styles.camera} type={type} ref={ref => setCameraRef(ref)} />
+        }
+
       </View>
       {showAppOptions ? (
         <View style={styles.optionsContainer}>
@@ -114,7 +126,17 @@ export default function App() {
         <View style={styles.footerContainer}>
           {/* <Button theme="primary" onPress={pickImageAsync} label="Choose a photo" />
           <Button onPress={() => setShowAppOptions(true)} label="Use this photo" /> */}
-          <Button onPress={toggleCameraType} label="Flip camera" />
+
+          {selectedImage ?
+            <Button onPress={() => setSelectedImage(null)} label="Retake picture" />
+            : (
+              <>
+                <Button onPress={toggleCameraType} label="Flip camera" />
+                <Button onPress={handleCapture} label="Capture picture" />
+              </>
+            )
+          }
+
           {/* <TouchableOpacity
             // onPress={openImagePickerAsync}
             onPress={toggleCameraType}
@@ -146,6 +168,10 @@ const styles = StyleSheet.create({
     width: 320,
     height: 440,
     borderRadius: 18,
+  },
+  camera: {
+    width: 320,
+    height: '40%'
   },
   optionsContainer: {
     position: 'absolute',
