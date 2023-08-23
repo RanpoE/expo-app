@@ -21,6 +21,7 @@ export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [pickedEmoji, setPickedEmoji] = useState(null)
   const [cameraRef, setCameraRef] = useState(null);
+  const [imageData, setImageData] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
 
@@ -33,11 +34,42 @@ export default function App() {
 
   const handleCapture = async () => {
     if (cameraRef) {
-      const photo = await cameraRef.takePictureAsync();
+      const options = { base64: true }
+      const photo = await cameraRef.takePictureAsync(options);
       // Do something with the captured photo
-      setSelectedImage(photo.uri)
+      const { uri } = photo
+      setSelectedImage(uri)
+      setImageData(photo)
     }
   };
+
+  const handleUploadPhoto = async () => {
+    const formData = new FormData();
+    formData.append('photo', {
+      uri: selectedImage,
+      type: 'image/jpg',
+      name: 'photo.jpg',
+    });
+    const data = {
+      image: selectedImage
+    }
+
+    fetch('http://127.0.0.1:8000/v1/upload64', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+    }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Upload success:', data);
+        // Handle the response from the server if needed
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
 
   if (status === null) {
     requestPermission()
@@ -108,10 +140,10 @@ export default function App() {
           <ImageViewer placeholderImageSource={splashImg} selectedImage={selectedImage} />
           {pickedEmoji !== null ? <EmojiSticker imageSize={40} stickerSource={pickedEmoji} /> : null}
         </View> */}
-        {selectedImage ?
+        {/* {selectedImage ? */}
           <ImageViewer placeholderImageSource={splashImg} selectedImage={selectedImage} />
-          : <Camera style={styles.camera} type={type} ref={ref => setCameraRef(ref)} />
-        }
+        {/* //   : <Camera style={styles.camera} type={type} ref={ref => setCameraRef(ref)} /> */}
+        {/* // } */}
 
       </View>
       {showAppOptions ? (
@@ -119,16 +151,21 @@ export default function App() {
           <View style={styles.optionsRow}>
             <IconButton icon="refresh" label="Reset" onPress={onReset} />
             <CircleButton onPress={onAddSticker} />
-            <IconButton icon="save-alt" label="Save" onPress={onSaveImageAsync} />
+            <IconButton icon="save-alt" label="Upload" onPress={handleUploadPhoto} />
           </View>
         </View>
       ) : (
         <View style={styles.footerContainer}>
-          {/* <Button theme="primary" onPress={pickImageAsync} label="Choose a photo" />
-          <Button onPress={() => setShowAppOptions(true)} label="Use this photo" /> */}
+          <Button theme="primary" onPress={pickImageAsync} label="Choose a photo" />
+          <Button onPress={() => setShowAppOptions(true)} label="Use this photo" />
 
           {selectedImage ?
-            <Button onPress={() => setSelectedImage(null)} label="Retake picture" />
+            (
+              <>
+                <Button onPress={() => setSelectedImage(null)} label="Retake picture" />
+                <Button onPress={handleUploadPhoto} label="Upload picture" />
+              </>
+            )
             : (
               <>
                 <Button onPress={toggleCameraType} label="Flip camera" />
