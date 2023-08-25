@@ -59,7 +59,7 @@ export default function App() {
       body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json'
-    }
+      }
     })
       .then((response) => response.json())
       .then((data) => {
@@ -141,7 +141,7 @@ export default function App() {
           {pickedEmoji !== null ? <EmojiSticker imageSize={40} stickerSource={pickedEmoji} /> : null}
         </View>
         {/* {selectedImage ? */}
-          {/* <ImageViewer placeholderImageSource={splashImg} selectedImage={selectedImage} /> */}
+        {/* <ImageViewer placeholderImageSource={splashImg} selectedImage={selectedImage} /> */}
         {/* //   : <Camera style={styles.camera} type={type} ref={ref => setCameraRef(ref)} /> */}
         {/* // } */}
 
