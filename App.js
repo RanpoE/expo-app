@@ -136,12 +136,12 @@ export default function App() {
   return (
     <GestureHandlerRootView style={styles.container}>
       <View style={styles.imageContainer}>
-        {/* <View ref={imageRef} collapsable={false}>
+        <View ref={imageRef} collapsable={false}>
           <ImageViewer placeholderImageSource={splashImg} selectedImage={selectedImage} />
           {pickedEmoji !== null ? <EmojiSticker imageSize={40} stickerSource={pickedEmoji} /> : null}
-        </View> */}
+        </View>
         {/* {selectedImage ? */}
-          <ImageViewer placeholderImageSource={splashImg} selectedImage={selectedImage} />
+          {/* <ImageViewer placeholderImageSource={splashImg} selectedImage={selectedImage} /> */}
         {/* //   : <Camera style={styles.camera} type={type} ref={ref => setCameraRef(ref)} /> */}
         {/* // } */}
 
@@ -151,7 +151,7 @@ export default function App() {
           <View style={styles.optionsRow}>
             <IconButton icon="refresh" label="Reset" onPress={onReset} />
             <CircleButton onPress={onAddSticker} />
-            <IconButton icon="save-alt" label="Upload" onPress={handleUploadPhoto} />
+            <IconButton icon="save-alt" label="Save" onPress={onSaveImageAsync} />
           </View>
         </View>
       ) : (
@@ -159,7 +159,7 @@ export default function App() {
           <Button theme="primary" onPress={pickImageAsync} label="Choose a photo" />
           <Button onPress={() => setShowAppOptions(true)} label="Use this photo" />
 
-          {selectedImage ?
+          {/* {selectedImage ?
             (
               <>
                 <Button onPress={() => setSelectedImage(null)} label="Retake picture" />
@@ -172,7 +172,7 @@ export default function App() {
                 <Button onPress={handleCapture} label="Capture picture" />
               </>
             )
-          }
+          } */}
 
           {/* <TouchableOpacity
             // onPress={openImagePickerAsync}
