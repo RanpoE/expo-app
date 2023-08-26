@@ -70,9 +70,8 @@ export default function App() {
         console.error('Error:', error);
       });
   }
-
-  if (permission === null) {
-    requestPermission()
+  if (status === null) {
+    requestPermissions()
   }
 
   const pickImageAsync = async () => {
