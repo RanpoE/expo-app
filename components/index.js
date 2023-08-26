@@ -6,4 +6,4 @@ import EmojiPicker from "./EmojiPicker";
 import EmojiList from "./EmojiList";
 import EmojiSticker from "./EmojiSticker";
 
-export { Button, IconButton, ImageViewer, CircleButton, EmojiPicker, EmojiList, EmojiSticker}
+export { Button, IconButton, ImageViewer, CircleButton, EmojiPicker, EmojiList, EmojiSticker }

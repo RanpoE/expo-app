@@ -71,7 +71,7 @@ export default function App() {
       });
   }
 
-  if (status === null) {
+  if (permission === null) {
     requestPermission()
   }
 
